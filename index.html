@@ -1,0 +1,222 @@
+<!-- mobile template. Also look at the other full screen template. Not sure which I like better. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #222;
+            font-family: Lato, sans-serif;
+            font-size: 100%;
+            color: #ddd;
+        }
+
+        header {
+            width: 80%;
+            margin: 10px auto 10px auto;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            background: rgba(63, 63, 63, 0.9);
+        }
+
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+
+        p {
+            font-size: 1em;
+            color: #ddd;
+        }
+
+        a {
+            color: #004A8B;
+        }
+
+        a:hover {
+            color: rgb(67, 69, 71);
+            text-decoration: none;
+        }
+
+        #info-button {
+            padding: 8px 5px;
+            font-size: 0.9em;
+            font-weight: bolder;
+            border: 2px solid rgba(244, 244, 244, 0.2);
+            background: rgba(100, 100, 100, 0.9);
+            color: rgba(244, 244, 244, 0.8);
+            /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); */
+            border-radius: 5px;
+            position: fixed;
+            top: 11px;
+            right: 11px;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        #footer {
+            width: 100%;
+            background: rgba(244, 244, 244, 0.8);
+            color: rgba(20, 20, 20, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            height: 0px;
+            padding: 0px;
+            z-index: 9000;
+            position: absolute;
+            bottom: -10px;
+            overflow: scroll;
+        }
+
+        #footer div {
+            padding: 10px;
+        }
+
+        #footer h1 {
+            font-size: 1.3em;
+            margin: 0 0 5px 0;
+        }
+
+        .footer-img {
+            float: right;
+            height: 10vh;
+            margin: 10px;
+        }
+
+        .legend {
+            padding: 6px 8px;
+            font-size: 1em;
+            border: 2px solid rgba(244, 244, 244, 0.2);
+            background: rgba(100, 100, 100, 0.9);
+            color: rgba(244, 244, 244, 0.8);
+            border-radius: 5px;
+        }
+
+        .legend h3 {
+            font-size: 1.1em;
+            font-weight: bolder;
+            color: #ddd;
+            margin: 0 0 10px 0;
+        }
+
+        .legend span {
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin: 0 10px 4px 0;
+        }
+
+        .legend label {
+            font-size: 1.1em;
+        }
+
+        .legend label:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .leaflet-popup-content {
+            max-width: 160px;
+        }
+
+        .leaflet-bar a {
+            /* border: 2px solid rgba(244, 244, 244, 0.2); */
+            background: rgba(100, 100, 100, 0.9);
+            color: rgba(244, 244, 244, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id='map'></div>
+    <button id="info-button" onclick="myInfo()">Information</button>
+    <div id='footer'>
+        <div><img src="https://uky-gis.github.io/graphics/logo-color-400px.png" class="footer-img">
+            <h1>Map title</h1>
+            Info about the map. Map created by <a href="https://github.com/tastyfreeze">Catographer</a> 😻.
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <script>
+        const map = L.map('map').setView([38, -98], 5);
+        let clicked = false
+
+        // Add shaded relief map
+        const options = {
+            minZoom: 0,
+            maxZoom: 9,
+            opacity: 1,
+            tms: true,
+            attribution: 'Elevation &copy; <a href="https://www.naturalearthdata.com/">Natural Earth</a>'
+        };
+
+        const tiles = L.tileLayer('https://nyc3.digitaloceanspaces.com/astoria/tiles/world/ne_v01/{z}/{x}/{y}.jpg',
+            options).addTo(map);
+
+        // Add base map
+        const Stamen_TonerLite = L.tileLayer(
+            'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                subdomains: 'abcd',
+                minZoom: 0,
+                maxZoom: 15,
+                opacity: 0.5,
+                ext: 'png'
+            });
+
+        Stamen_TonerLite.addTo(map);
+
+        // Report zoom level
+
+        map.on("zoom", function () {
+            const zoomLevel = map.getZoom()
+            if (zoomLevel > 4) {
+                const reportZoom = `Current zoom level: ${zoomLevel}`
+                console.log(reportZoom)
+            }
+        })
+
+
+
+
+        /* --------------- Toggle on/off info footer content ---------------  */
+        function myInfo() {
+            const x = document.getElementById('footer');
+            const y = document.getElementById('info-button');
+            if (clicked) {
+                y.style.background = 'rgba(100, 100, 100, 0.9)';
+                x.style.height = '0px';
+            } else {
+                y.style.background = 'rgba(79, 146, 17, 0.8)'
+                x.style.height = '33vh';
+            }
+            clicked = !clicked
+        }
+    </script>
+
+</body>
+
+</html>
