@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset=utf-8 />
+  <title>U.S. Housing Map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+  <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #8c8c8c;
+      /* dark */
+      font-family: Lato, sans-serif;
+      font-size: 100%;
+      color: #ddd;
+      /* light */
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      background: rgba(63, 63, 63, 0.9);
+      /* with transparency */
+    }
+
+    a {
+      color: #004A8B;
+    }
+
+    a:hover {
+      color: rgb(67, 69, 71);
+      text-decoration: none;
+    }
+
+    .legend {
+      padding: 6px 8px;
+      font-size: 1em;
+      /* Use transparency to blend elements. */
+      border: 2px solid rgba(244, 244, 244, 0.2);
+      background: rgba(100, 100, 100, 0.9);
+      color: rgba(244, 244, 244, 0.8);
+      border-radius: 5px;
+    }
+
+    .legend h3 {
+      font-size: 1.1em;
+      font-weight: bolder;
+      color: #ddd;
+      /* Light */
+      margin: 0 0 10px 0;
+    }
+
+    .leaflet-bar a {
+      /* Override the default style for Leaflet's zoom  */
+      background: rgba(100, 100, 100, 0.9);
+      color: rgba(244, 244, 244, 0.8);
+    }
+
+    .legend span {
+      width: 20px;
+      height: 20px;
+      float: left;
+      margin: 0 10px 4px 0;
+    }
+
+    .legend label {
+      font-size: 1.1em;
+    }
+
+    .legend label:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    #info-button {
+      padding: 8px 5px;
+      font-size: 14px;
+      font-weight: bolder;
+      /* style matches leaflet controls */
+      border: 2px solid rgba(244, 244, 244, 0.2);
+      background: rgba(100, 100, 100, 0.9);
+      color: rgba(244, 244, 244, 0.8);
+      border-radius: 5px;
+      /* position is fixed next to the zoom bar */
+      position: fixed;
+      top: 11px;
+      right: 52px;
+      /* draw it on top of all elements */
+      z-index: 9999;
+      /* curson change on hover --doesn't work on touch screens */
+      cursor: pointer;
+    }
+
+    #footer {
+      width: 100%;
+      background: rgba(244, 244, 244, 0.8);
+      color: rgba(20, 20, 20, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      height: 0px;
+      padding: 0px;
+      /* display beow the button to allow clicking if overlay covers screen */
+      z-index: 9000;
+      position: absolute;
+      /* hide the footer by default. this shouldn't contain too much info. link to a new page for extended content. */
+      bottom: -10px;
+      /* if too much is included, enable scroll */
+      overflow: scroll;
+    }
+
+    #footer div {
+      padding: 10px;
+    }
+
+    #footer h1 {
+      font-size: 1.3em;
+      margin: 0 0 5px 0;
+    }
+
+    .footer-img {
+      float: right;
+      height: 10vh;
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <!-- <h1>U.S. Housing Map</h1>
+    <h2>Map Subtitle</h2> -->
+  </header>
+
+  <div id='map'></div>
+  <button id='info-button' onclick='myInfo()'>Information</button>
+  <div id='footer'>
+    <div><img src="https://uky-gis.github.io/graphics/logo-color-400px.png" class="footer-img">
+      <h1>Average cost of rent by U.S. county</h1>
+      Data obtained through (<a href="https://data.census.gov/cedsci/">data.census.gov</a>). Map created by <a
+        href="https://github.com/coxco96">Court Cox</a>, Fall 2021.
+    </div>
+  </div>
+
+  <footer>
+    <!-- <p>Map authored by Court Cox</p>
+     -->
+  </footer>
+
+  <!-- Load scripts using Subresource Integrity (SRI) is a security feature 
+      that enables browsers to verify that resources they fetch (from a CDN) 
+      are delivered without unexpected manipulation. -->
+
+  <!-- add jQuery script: -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <!-- add Leaflet script: -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+  <!-- add simple statistics script: -->
+  <script src='https://unpkg.com/simple-statistics@7.6.0/dist/simple-statistics.min.js'>
+  </script>
+
+  <script>
+    // MAKE AN AWESOME WEB MAP!
+    var options = {
+      center: [38.8, -95.8],
+      zoom: 4.4,
+      zoomSnap: .1,
+      //zoomControl: false
+    }
+
+    var map = L.map('map', options);
+    map.addControl(L.control.zoom({
+      position: 'topright'
+    }));
+
+    var annualPills = "kyoxydata_pillsperperson";
+    var countyName = "NAME";
+
+    var countyLayer = $.getJSON("data/kyoxybycounty.json", function (data) {
+      //data loaded from the file is accessible here within this function
+      var dataLayer = L.geoJson(data, {
+        style: function (feature) {
+          return {
+            color: '#4a4a4a',
+            weight: 1,
+            fillOpacity: 1,
+            fillColor: '#1f78bf'
+          };
+        }
+      })
+      //find zoom extent from new layer
+      var zoomExtent = dataLayer.getBounds();
+
+      //apply that extent to our map with a custom property that says max zoom on load will not exceed 8, which adds margin around the state
+
+      // map.fitBounds(zoomExtent, {
+      //   maxZoom: 8
+      // })
+
+      dataLayer.addTo(map);
+      drawMap(dataLayer);
+
+      dataLayer.eachLayer(function (layer) {
+        var props = layer.feature.properties;
+
+        var toolTipInfo =
+          `<h3>${(props[countyName])} County <br> ${(props[annualPills])} pills per person per year</h3>`;
+
+
+        if (L.Browser.mobile) {
+          //if true use popup
+          layer.bindPopup(toolTipInfo).addTo(map);
+        } else {
+          //if false use tooltip
+          layer.bindTooltip(toolTipInfo, {
+            sticky: true
+          }).addTo(map);
+        };
+      });
+    });
+
+    //add state outlines:
+
+    //tell jQuery to wait until data is loaded before executing function:
+    $.when(countyLayer).done(function () {
+      //load, filter, and style state outline:
+      $.getJSON("data/kycounties.geojson", function (data) {
+        var stateLayer = L.geoJson(data, {
+          style: function (feature) {
+            return {
+              color: '#292929',
+              weight: 1.5,
+              fillOpacity: 0,
+              interactive: false
+            };
+          }
+          //you would filter for the correct state here if needed
+
+        });
+        stateLayer.addTo(map)
+      });
+    });
+
+
+
+
+
+
+
+
+
+
+    //FUNCTIONS:
+
+    function drawMap(dataLayer) {
+      //we now have access to dataLayer here
+
+      var breaks = getClassBreaks(dataLayer);
+
+      dataLayer.eachLayer(function (layer) {
+        var props = layer.feature.properties;
+        layer.setStyle({
+          fillColor: getColor(props[annualPills], breaks)
+        });
+      });
+      drawLegend(breaks);
+    } // end drawMap()
+
+
+
+    function getClassBreaks(dataLayer) {
+      var values = [];
+
+      dataLayer.eachLayer(function (layer) {
+        var props = layer.feature.properties
+
+        //calculate normalized value
+        var value = props[annualPills];
+
+        //push that value to the array
+        if (props[annualPills] != 0 && value != null) {
+          values.push(value);
+        }
+      });
+      //console.log(values);
+
+      //determine similar clusters:
+      var clusters = ss.ckmeans(values, 5);
+
+      // create an array of the lowest value within each cluster:
+
+      var breaks = clusters.map(function (cluster) {
+        return [cluster[0], cluster.pop()];
+      });
+      console.log(breaks);
+      return breaks; // return Array of class breaks
+    } // end of classBreaks function
+
+
+
+
+
+
+
+    function getColor(d, breaks) {
+      if (d <= breaks[0][1]) {
+        return '#f2f0f7';
+      } else if (d <= breaks[1][1]) {
+        return '#cbc9e2';
+      } else if (d <= breaks[2][1]) {
+        return '#9e9ac8';
+      } else if (d <= breaks[3][1]) {
+        return '#756bb1';
+      } else if (d <= breaks[4][1]) {
+        return '#54278f'
+      }
+    } // end getColor function
+
+
+
+
+    // add drawLegend function here
+
+    function drawLegend(breaks) {
+      //create leaflet control and position:
+      var legend = L.control({
+        position: 'topleft'
+      });
+      //when it's added to the map:
+      legend.onAdd = function () {
+        //create a new HTML <div> element with a class name of "legend":
+        var div = L.DomUtil.create('div', 'legend');
+        //insert placeholder text for now if needed:
+        div.innerHTML = `<h3>Pills per person, per year, on average:</h3>`
+
+        for (var i = 0; i < breaks.length; i++) {
+          //determine the color associated with each break value including the lower range value
+          var color = getColor(breaks[i][0], breaks);
+
+
+
+
+          console.log(color)
+
+          //concatenate a <span> tag styled with the color and the range value of that class and include a label with the low and high ends of that class range:
+          div.innerHTML +=
+            `<span style ="background: ${color}"></span><label>${(breaks[i][0]).toLocaleString()}&mdash; ${(breaks[i][1]).toLocaleString()}</label>`;
+        }
+        //return div element (return populated div to be added to map):
+        return div;
+      }; // end onAdd method
+      //add legend to map:
+      legend.addTo(map);
+    } // end drawLegend function
+
+    //toggle on/off footer content for mobile:
+
+    var clicked = false // start with false condition
+    function myInfo() {
+      //create button that changes color on click
+      //create a footer overlay that displays 33% of current viewport height
+      var x = document.getElementById('footer');
+      var y = document.getElementById('info-button');
+      if (clicked) {
+        y.style.background = 'rgba(100, 100, 100, 0.9)'; // gray button
+        x.style.height = '0px'; // no footer height
+      } else {
+        y.style.background = 'rgba(146, 239, 146, 0.8)' // green button
+        x.style.height = '33vh'; // footer 33% of viewport height
+      }
+      clicked = !clicked
+    }
+
+
+
+
+
+
+    //beautify spacer
+  </script>
+
+</body>
+
+</html>
