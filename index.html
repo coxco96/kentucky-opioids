@@ -1,118 +1,155 @@
-<!-- mobile template. Also look at the other full screen template. Not sure which I like better. -->
-
+<!-- using this one! -->
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset=utf-8 />
-    <title></title>
+    <title>Kentucky Opioid Use</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel='icon' href='https://newmapsplus.github.io/favicon.ico' type='image/x-icon' />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
-    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,900i" rel="stylesheet">
+    <!-- font-family: 'Roboto', sans-serif; -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!-- font-family: 'Roboto Condensed', sans-serif -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
 
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: #222;
-            font-family: Lato, sans-serif;
+            background: #ededed;
+            font-family: 'Lato', sans-serif;
+            font-weight: 300;
+            color: #2e2e2e;
             font-size: 100%;
-            color: #ddd;
+            /* 16px is default browser size */
+
         }
 
-        header {
-            width: 80%;
-            margin: 10px auto 10px auto;
-        }
 
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            background: rgba(63, 63, 63, 0.9);
-        }
-
+        /* section, */
+        header,
         footer {
-            padding: 6px 10%;
+            width: 60%;
+            margin: 10px auto;
+        }
+
+        section {
             width: 80%;
+            margin: 10px auto;
+        }
+
+        h1 {
+            font-weight: 900;
+            font-size: 2.8em;
+            color: '#2e2e2e';
+            /* The em unit. 3x the current size */
+            letter-spacing: .02em;
+            margin: 5px 0;
+            font-family: 'Roboto Condensed', sans-serif;
+            /* text-transform: uppercase; */
+        }
+
+        h2 {
+            font-weight: 300;
+            color: #63666a;
+            font-size: 2.2em;
+            letter-spacing: .06em;
+            margin: 5px 0;
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        h3 {
+            font-weight: 300i;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            font-family: 'Roboto', sans-serif;
         }
 
         p {
-            font-size: 1em;
-            color: #ddd;
+            font-size: 1.3em;
+            line-height: 1.8em;
+            margin-bottom: 5px;
         }
 
         a {
             color: #004A8B;
-        }
-
-        a:hover {
-            color: rgb(67, 69, 71);
+            font-weight: 400;
             text-decoration: none;
         }
 
-        #info-button {
-            padding: 8px 5px;
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            padding: 0px 20px 4px 20px;
+            font-size: 1.1em;
+            line-height: 1.2em;
+            color: #63666a;
+        }
+
+        li {
+            margin: 10px 0
+        }
+
+        hr {
+            margin: 20px 0;
+            border: 0;
+            height: 1px;
+            background: #63666a;
+
+        }
+
+        .linkbox {
+            margin: 3px 0 20px 0;
+            display: block;
             font-size: 0.9em;
-            font-weight: bolder;
-            border: 2px solid rgba(244, 244, 244, 0.2);
-            background: rgba(100, 100, 100, 0.9);
-            color: rgba(244, 244, 244, 0.8);
-            /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); */
-            border-radius: 5px;
-            position: fixed;
-            top: 11px;
-            right: 11px;
-            z-index: 9999;
-            cursor: pointer;
+            font-weight: 300;
+            line-height: 1.3em;
         }
 
-        #footer {
+        #map {
             width: 100%;
-            background: rgba(244, 244, 244, 0.8);
-            color: rgba(20, 20, 20, 0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            height: 0px;
-            padding: 0px;
-            z-index: 9000;
-            position: absolute;
-            bottom: -10px;
-            overflow: scroll;
-        }
+            /* height: 450px; */
+            height: 500px;
+            margin: 20px auto;
+            background: #ededed;
 
-        #footer div {
-            padding: 10px;
-        }
 
-        #footer h1 {
-            font-size: 1.3em;
-            margin: 0 0 5px 0;
-        }
 
-        .footer-img {
-            float: right;
-            height: 10vh;
-            margin: 10px;
+
         }
 
         .legend {
             padding: 6px 8px;
             font-size: 1em;
+            /* Use transparency to blend elements. */
             border: 2px solid rgba(244, 244, 244, 0.2);
             background: rgba(100, 100, 100, 0.9);
             color: rgba(244, 244, 244, 0.8);
             border-radius: 5px;
+            font-family: 'Roboto Condensed', sans-serif;
         }
 
         .legend h3 {
             font-size: 1.1em;
             font-weight: bolder;
             color: #ddd;
+            /* Light */
             margin: 0 0 10px 0;
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .leaflet-bar a {
+            /* Override the default style for Leaflet's zoom  */
+            background: rgba(100, 100, 100, 0.9);
+            color: rgba(244, 244, 244, 0.8);
         }
 
         .legend span {
@@ -132,91 +169,370 @@
             clear: both;
         }
 
-        .leaflet-popup-content {
-            max-width: 160px;
+        .max-image-width {
+            width: 100%;
         }
 
-        .leaflet-bar a {
-            /* border: 2px solid rgba(244, 244, 244, 0.2); */
-            background: rgba(100, 100, 100, 0.9);
-            color: rgba(244, 244, 244, 0.8);
+        /* Use float property to make two-column layout */
+        .first-column {
+            float: left;
+            width: 49%;
+            padding-right: 2%;
+        }
+
+        .column {
+            float: left;
+            width: 49%;
+        }
+
+        /* Clear floats after the columns */
+        .row::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        /* When browser is 900px wide or less */
+        @media screen and (max-width: 900px) {
+
+            .first-column,
+            .second-column {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div id='map'></div>
-    <button id="info-button" onclick="myInfo()">Information</button>
-    <div id='footer'>
-        <div><img src="https://uky-gis.github.io/graphics/logo-color-400px.png" class="footer-img">
-            <h1>Map title</h1>
-            Info about the map. Map created by <a href="https://github.com/tastyfreeze">Catographer</a> 😻.
+    <!-- <header>
+		<h1>My map</h1>
+	</header> -->
+
+    <section>
+        <div class="row">
+            <div id="map"></div>
+            <h1>How many hydro/oxycodone pills were shipped to your Kentucky county annually from 2006-2014?</h1>
+            <br><br>
+            <div class="first-column">
+
+                <h2>Patterns of map production</h2>
+                <p>
+                    "I make maps like other cartographers."
+                    (<a href="https://en.wikipedia.org/wiki/List_of_cartographers">Wikipedia list of cartographers.</a>)
+                </p>
+
+                <p><b>Social links</b></p>
+                <ul>
+                    <li>See my projects on GitHub: <a href="https://github.com/newmapsplus">New Maps Plus</a></li>
+                    <li>Follow me on twitter: <a href="https://twitter.com/NewMapsPlus">@NewMapsPlus</a></li>
+                    <li>Visit my <a href='#'>mapping portfolio</a>.</li>
+                </ul>
+
+
+            </div>
+            <div class="column">
+                <img class="max-image-width" src="https://farm2.staticflickr.com/1816/28917431097_5bb5cadb70_h.jpg"
+                    title="Electricity and bubbles in a Lexington sunset">
+                <div class="linkbox">
+                    Electricity and bubbles in a Lexington sunset
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+    <footer>
+        <hr>
 
+        <a href="https://newmapsplus.github.io">
+            <img src="https://newmapsplus.github.io/assets/graphics/logo-2018-nmp-75px-h-gray.png"
+                alt="University of Kentucky Geography">
+        </a>
 
+        <a href="https://uky-gis.github.io">
+            <img src="https://newmapsplus.github.io/assets/graphics/logo-2018-geography-75px-h.png"
+                alt="University of Kentucky Geography">
+        </a>
+
+    </footer>
+
+    <!-- add Leaflet script: -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-
-    <script>
-        const map = L.map('map').setView([38, -98], 5);
-        let clicked = false
-
-        // Add shaded relief map
-        const options = {
-            minZoom: 0,
-            maxZoom: 9,
-            opacity: 1,
-            tms: true,
-            attribution: 'Elevation &copy; <a href="https://www.naturalearthdata.com/">Natural Earth</a>'
-        };
-
-        const tiles = L.tileLayer('https://nyc3.digitaloceanspaces.com/astoria/tiles/world/ne_v01/{z}/{x}/{y}.jpg',
-            options).addTo(map);
-
-        // Add base map
-        const Stamen_TonerLite = L.tileLayer(
-            'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
-                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                subdomains: 'abcd',
-                minZoom: 0,
-                maxZoom: 15,
-                opacity: 0.5,
-                ext: 'png'
-            });
-
-        Stamen_TonerLite.addTo(map);
-
-        // Report zoom level
-
-        map.on("zoom", function () {
-            const zoomLevel = map.getZoom()
-            if (zoomLevel > 4) {
-                const reportZoom = `Current zoom level: ${zoomLevel}`
-                console.log(reportZoom)
-            }
-        })
-
-
-
-
-        /* --------------- Toggle on/off info footer content ---------------  */
-        function myInfo() {
-            const x = document.getElementById('footer');
-            const y = document.getElementById('info-button');
-            if (clicked) {
-                y.style.background = 'rgba(100, 100, 100, 0.9)';
-                x.style.height = '0px';
-            } else {
-                y.style.background = 'rgba(79, 146, 17, 0.8)'
-                x.style.height = '33vh';
-            }
-            clicked = !clicked
-        }
+    <!-- add jQuery script: -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- add Simple Statistics script: -->
+    <script src='https://unpkg.com/simple-statistics@7.6.0/dist/simple-statistics.min.js'>
     </script>
 
+
+    <script>
+        if (L.Browser.mobile) {
+            var options = {
+                center: [37.8, -85.8],
+                zoom: 5.6,
+                zoomSnap: .3,
+                zoomControl: false
+            }
+        } else {
+            var options = {
+                center: [37.8, -85.8],
+                zoom: 7.1,
+                zoomSnap: .3,
+                zoomControl: false
+            }
+
+        }
+
+        // map options
+        // var options = {
+        // 	center: [37.8, -85.8],
+        // 	zoom: 7.1,
+        // 	zoomSnap: .3,
+        // 	zoomControl: false
+        // }
+
+        // create a Leaflet map in our division container with id of 'map'
+        var map = L.map('map', options);
+
+        var annualPills = 'kyoxydata_pillsperperson';
+        var countyName = 'NAME';
+
+        var countyLayer = $.getJSON("data/kyoxybycounty.json", function (data) {
+            //data loaded from the file is now accessible here within this function
+            var dataLayer = L.geoJson(data, {
+                style: function (feature) {
+                    return {
+                        color: '#2e2e2e',
+                        weight: 1.2,
+                        fillOpacity: .95,
+                        fillColor: '#1f78bf'
+                    };
+                }
+            })
+
+            //we're still in the $.getJSON function
+
+            dataLayer.addTo(map);
+            drawMap(dataLayer);
+
+            dataLayer.eachLayer(function (layer) {
+                var props = layer.feature.properties;
+                if (props[annualPills] != 'null') {
+                    var toolTipInfo =
+                        `<h3>${(props[countyName])} County <br> ${(props[annualPills])} pills per person per year</h3>`;
+                } else {
+                    var toolTipInfo =
+                        `<h3>${(props[countyName])} County <br> data unavailable`;
+                }
+
+                //console.log(props);
+                layer.bindTooltip(toolTipInfo, {
+                    sticky: true,
+                    opacity: .8
+                }).addTo(map);
+            });
+        }); // end $.getJSON function
+
+
+
+        //add county outlines:
+
+        //tell jQuery to wait until data is loaded before executing function:
+        // $.when(countyLayer).done(function () {
+        // 	//load, filter, and style state outline:
+        // 	$.getJSON("data/kycounties.geojson", function (data) {
+        // 		var stateLayer = L.geoJson(data, {
+        // 			style: function (feature) {
+        // 				return {
+        // 					color: '#292929',
+        // 					weight: .25,
+        // 					fillOpacity: 0,
+        // 					interactive: false
+        // 				};
+        // 			}
+        // 			//you would filter for the correct state here if needed
+
+        // 		});
+        // 		stateLayer.addTo(map)
+        // 	});
+        // });
+
+        //	FUNCTIONS:
+
+        function drawMap(dataLayer) {
+            // I know that this works, but I don't understand how this gives us access to dataLayer since dataLayer isn't defined in the global scope?
+            var breaks = getClassBreaks(dataLayer);
+            dataLayer.eachLayer(function (layer) {
+                var props = layer.feature.properties;
+                layer.setStyle({
+                    fillColor: getColor(props[annualPills], breaks)
+                });
+            });
+            drawLegend(breaks);
+
+        } // end drawMap()
+
+
+        function getClassBreaks(dataLayer) {
+            var values = [];
+            dataLayer.eachLayer(function (layer) {
+                var props = layer.feature.properties;
+                var value = Number(props[annualPills]);
+                //console.log(typeof (value));
+
+                if (props[annualPills] != 0 && value != null) {
+                    values.push(value);
+                    //	console.log(values);
+                }
+            });
+            //determine similar clusters 
+            var clusters = ss.ckmeans(values, 5);
+            //console.log(clusters);
+
+
+            var breaks = clusters.map(function (cluster) {
+                return [cluster[0], cluster.pop()];
+            });
+
+            //console.log(breaks);
+            return breaks;
+        } // end of classBreaks function
+
+
+        // function getColor(d, breaks) {
+        // 	if (d <= breaks[0][1]) {
+        // 		return '#f2f0f7';
+        // 	} else if (d <= breaks[1][1]) {
+        // 		return '#cbc9e2';
+        // 	} else if (d <= breaks[2][1]) {
+        // 		return '#9e9ac8';
+        // 	} else if (d <= breaks[3][1]) {
+        // 		return '#756bb1';
+        // 	} else if (d <= breaks[4][1]) {
+        // 		return '#54278f'
+        // 	}
+        // } // end getColor function
+
+        function getColor(value, data) {
+            if (value <= 24.9) {
+                var color = '#f1eef6';
+                return color;
+            } else if (value <= 49.9) {
+                var color = '#d7b5d8'
+                return color;
+            } else if (value <= 74.9) {
+                var color = '#df65b0'
+                return color;
+            } else if (value <= 99.9) {
+                var color = '#dd1c77'
+                return color;
+            } else if (value <= 99999) {
+                var color = '#980043';
+                return color;
+            }
+        }
+
+
+
+        myObject = {
+
+            classOne: {
+                color: '#f1eef6',
+                range: [1, 24]
+            },
+            classTwo: {
+                color: '#d7b5d8',
+                range: [25, 49]
+            },
+            classThree: {
+                color: '#df65b0',
+                range: [50, 74]
+            },
+            classFour: {
+                color: '#dd1c77',
+                range: [75, 99]
+            },
+            classFive: {
+                color: '#980043',
+                range: [100, 185]
+            }
+
+
+        }
+
+        console.log(Object.keys(myObject).length);
+
+        var howManyClasses = Object.keys(myObject).length;
+
+        eachClass = Object.keys(myObject);
+        console.log(eachClass);
+
+        function drawLegend(color) {
+            //create leaflet control and position:
+
+
+
+
+            if (L.Browser.mobile) {
+                var legend = L.control({
+
+
+                    position: 'topright'
+
+                });
+            } else {
+                var legend = L.control({
+                    position: 'topleft'
+                })
+            }
+            //when it's added to the map:
+            legend.onAdd = function () {
+                //create a new HTML <div> element with a class name of "legend":
+                var div = L.DomUtil.create('div', 'legend');
+                //insert placeholder text for now if needed:
+                div.innerHTML = `<h3>Pills per person, per year, on average:</h3>`
+
+                for (let key in myObject) {
+
+                    //var legendColor = [key][color];
+                    console.log(myObject[key]["color"]);
+                    var legendColor = myObject[key]["color"];
+                    var legendDescription =
+                        `${myObject[key]["range"][0]} - ${myObject[key]["range"][1]} pills shipped per person`;
+                    //concatenate a <span> tag styled with the color and the range value of that class and include a label with the low and high ends of that class range:
+                    div.innerHTML +=
+                        `<span style ="background: ${legendColor}"></span><label>${legendDescription}</label>`;
+                    //console.log(color)
+                }
+                //return div element (return populated div to be added to map):
+                return div;
+            }; // end onAdd method
+            //add legend to map:
+            legend.addTo(map);
+
+        } // end drawLegend function
+
+
+
+
+
+
+        // // Leaflet providers base map URL
+        // var basemap_source =
+        // 	'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png'
+
+        // // Leaflet providers attributes
+        // var basemap_options = {
+        // 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        // 	subdomains: 'abcd',
+        // 	maxZoom: 19
+        // };
+
+        // request some basemap tiles and add to the map
+        //var tiles = L.tileLayer(basemap_source, basemap_options).addTo(map);
+    </script>
 </body>
 
 </html>
