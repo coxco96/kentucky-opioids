@@ -1,9 +1,10 @@
+<!-- using this one! -->
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset=utf-8 />
-	<title>What is my title!</title>
+	<title>Kentucky Opioid Use</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 	<link rel='icon' href='https://newmapsplus.github.io/favicon.ico' type='image/x-icon' />
 
@@ -14,29 +15,27 @@
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,900i" rel="stylesheet">
 
 	<style>
-		/* 
-			UKy Colors: 
-            #c7c9c8 light gray 
-            #63666a dark gray
-            #15397f dark blue
-            #009bda light blue
-            #0033a0 official blue
-        */
 		body {
 			margin: 0;
 			padding: 0;
-			background: #e3e3e6;
+			background: #2e2e2e;
 			font-family: 'Lato', sans-serif;
 			font-weight: 300;
-			color: #3d3d3d;
+			color: #f1f1f1;
 			font-size: 100%;
 			/* 16px is default browser size */
 
 		}
 
+
+		/* section, */
 		header,
-		section,
 		footer {
+			width: 60%;
+			margin: 10px auto;
+		}
+
+		section {
 			width: 80%;
 			margin: 10px auto;
 		}
@@ -111,9 +110,54 @@
 
 		#map {
 			width: 100%;
-			height: 450px;
+			/* height: 450px; */
+			height: 700px;
 			margin: 20px auto;
+			background: #232323;
+		
+			
 
+		}
+
+		.legend {
+			padding: 6px 8px;
+			font-size: 1em;
+			/* Use transparency to blend elements. */
+			border: 2px solid rgba(244, 244, 244, 0.2);
+			background: rgba(100, 100, 100, 0.9);
+			color: rgba(244, 244, 244, 0.8);
+			border-radius: 5px;
+		}
+
+		.legend h3 {
+			font-size: 1.1em;
+			font-weight: bolder;
+			color: #ddd;
+			/* Light */
+			margin: 0 0 10px 0;
+		}
+
+		.leaflet-bar a {
+			/* Override the default style for Leaflet's zoom  */
+			background: rgba(100, 100, 100, 0.9);
+			color: rgba(244, 244, 244, 0.8);
+		}
+
+		.legend span {
+			width: 20px;
+			height: 20px;
+			float: left;
+			margin: 0 10px 4px 0;
+		}
+
+		.legend label {
+			font-size: 1.1em;
+		}
+
+		.legend label:after {
+			content: '';
+			display: block;
+			clear: both;
 		}
 
 		.max-image-width {
@@ -152,14 +196,16 @@
 
 <body>
 
-	<header>
+	<!-- <header>
 		<h1>My map</h1>
-	</header>
+	</header> -->
+
 	<section>
 		<div class="row">
 			<div id="map"></div>
 
 			<div class="first-column">
+				<h1>Kentucky Opioid Shipments from 2006-2014</h1>
 				<h2>Patterns of map production</h2>
 				<p>
 					"I make maps like other cartographers."
@@ -199,19 +245,250 @@
 
 	</footer>
 
+	<!-- add Leaflet script: -->
 	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
 		crossorigin=""></script>
+	<!-- add jQuery script: -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<!-- add Simple Statistics script: -->
+	<script src='https://unpkg.com/simple-statistics@7.6.0/dist/simple-statistics.min.js'>
+	</script>
+
 
 	<script>
 		// map options
 		var options = {
-			center: [38, -95],
-			zoom: 4
+			center: [37.8, -85.8],
+			zoom: 7.85,
+			zoomSnap: .3,
 		}
 
 		// create a Leaflet map in our division container with id of 'map'
 		var map = L.map('map', options);
+
+		var annualPills = 'kyoxydata_pillsperperson';
+		var countyName = 'NAME';
+
+		var countyLayer = $.getJSON("data/kyoxybycounty.json", function (data) {
+			//data loaded from the file is now accessible here within this function
+			var dataLayer = L.geoJson(data, {
+				style: function (feature) {
+					return {
+						color: '#4a4a4a',
+						weight: 1,
+						fillOpacity: 1,
+						fillColor: '#1f78bf'
+					};
+				}
+			})
+
+			//we're still in the $.getJSON function
+
+			dataLayer.addTo(map);
+			drawMap(dataLayer);
+
+			dataLayer.eachLayer(function (layer) {
+				var props = layer.feature.properties;
+
+				var toolTipInfo =
+					`<h3>${(props[countyName])} County <br> ${(props[annualPills])} pills per person per year</h3>`;
+
+				if (L.Browser.mobile) {
+					//if mobile use popup
+					layer.bindPopup(toolTipInfo).addTo(map);
+				} else {
+					//if false (not mobile) use tooltip
+					layer.bindTooltip(toolTipInfo, {
+						sticky: true
+					}).addTo(map);
+				};
+			});
+		}); // end $.getJSON function
+
+		//add county outlines:
+
+		//tell jQuery to wait until data is loaded before executing function:
+		$.when(countyLayer).done(function () {
+			//load, filter, and style state outline:
+			$.getJSON("data/kycounties.geojson", function (data) {
+				var stateLayer = L.geoJson(data, {
+					style: function (feature) {
+						return {
+							color: '#292929',
+							weight: .25,
+							fillOpacity: 0,
+							interactive: false
+						};
+					}
+					//you would filter for the correct state here if needed
+
+				});
+				stateLayer.addTo(map)
+			});
+		});
+
+		//	FUNCTIONS:
+
+		function drawMap(dataLayer) {
+			// I know that this works, but I don't understand how this gives us access to dataLayer since dataLayer isn't defined in the global scope?
+			var breaks = getClassBreaks(dataLayer);
+			dataLayer.eachLayer(function (layer) {
+				var props = layer.feature.properties;
+				layer.setStyle({
+					fillColor: getColor(props[annualPills], breaks)
+				});
+			});
+			drawLegend(breaks);
+
+		} // end drawMap()
+
+
+		function getClassBreaks(dataLayer) {
+			var values = [];
+			dataLayer.eachLayer(function (layer) {
+				var props = layer.feature.properties;
+				var value = Number(props[annualPills]);
+				//console.log(typeof (value));
+
+				if (props[annualPills] != 0 && value != null) {
+					values.push(value);
+					//	console.log(values);
+				}
+			});
+			//determine similar clusters 
+			var clusters = ss.ckmeans(values, 5);
+			//console.log(clusters);
+
+
+			var breaks = clusters.map(function (cluster) {
+				return [cluster[0], cluster.pop()];
+			});
+
+			//console.log(breaks);
+			return breaks;
+		} // end of classBreaks function
+
+
+		// function getColor(d, breaks) {
+		// 	if (d <= breaks[0][1]) {
+		// 		return '#f2f0f7';
+		// 	} else if (d <= breaks[1][1]) {
+		// 		return '#cbc9e2';
+		// 	} else if (d <= breaks[2][1]) {
+		// 		return '#9e9ac8';
+		// 	} else if (d <= breaks[3][1]) {
+		// 		return '#756bb1';
+		// 	} else if (d <= breaks[4][1]) {
+		// 		return '#54278f'
+		// 	}
+		// } // end getColor function
+
+		function getColor(value, data) {
+			if (value <= 25) {
+				var color = '#f2f0f7';
+				return color;
+			} else if (value <= 50) {
+				var color = '#cbc9e2'
+				return color;
+			} else if (value <= 75) {
+				var color = '#9e9ac8'
+				return color;
+			} else if (value <= 100) {
+				var color = '#756bb1'
+				return color;
+			} else if (value <= 99999) {
+				var color = '#54278f';
+				return color;
+			}
+		}
+
+
+
+		myObject = {
+			
+				classOne: {
+					color: '#f2f0f7',
+					range: [1, 24]
+				},
+				classTwo: {
+					color: '#cbc9e2',
+					range: [25, 49]
+				},
+				classThree: {
+					color: '#9e9ac8',
+					range: [50, 74]
+				},
+				classFour: {
+					color: '#756bb1',
+					range: [75, 99]
+				},
+				classFive: {
+					color: '#54278f',
+					range: [100, 185]
+				}
+				
+			
+		}
+
+		console.log(Object.keys(myObject).length);
+		
+		var howManyClasses = Object.keys(myObject).length;
+		
+		eachClass = Object.keys(myObject);
+		console.log(eachClass);
+		function drawLegend(color) {
+			//create leaflet control and position:
+			var legend = L.control({
+				position: 'topleft'
+			});
+			//when it's added to the map:
+			legend.onAdd = function () {
+				//create a new HTML <div> element with a class name of "legend":
+				var div = L.DomUtil.create('div', 'legend');
+				//insert placeholder text for now if needed:
+				div.innerHTML = `<h3>Pills per person, per year, on average:</h3>`
+
+				for (let key in myObject) {
+				
+					//var legendColor = [key][color];
+					console.log(myObject[key]["color"]);
+					var legendColor = myObject[key]["color"];
+					var legendDescription =`${myObject[key]["range"][0]} - ${myObject[key]["range"][1]} pills shipped per person`;
+					//concatenate a <span> tag styled with the color and the range value of that class and include a label with the low and high ends of that class range:
+					div.innerHTML +=
+						`<span style ="background: ${legendColor}"></span><label>${legendDescription}</label>`;
+					//console.log(color)
+				}
+				//return div element (return populated div to be added to map):
+				return div;
+			}; // end onAdd method
+			//add legend to map:
+			legend.addTo(map);
+
+		} // end drawLegend function
+
+		//toggle on/off footer content for mobile:
+
+		var clicked = false // start with false condition
+		function myInfo() {
+			//create button that changes color on click
+			//create a footer overlay that displays 33% of current viewport height
+			var x = document.getElementById('footer');
+			var y = document.getElementById('info-button');
+			if (clicked) {
+				y.style.background = 'rgba(100, 100, 100, 0.9)'; // gray button
+				x.style.height = '0px'; // no footer height
+			} else {
+				y.style.background = 'rgba(146, 239, 146, 0.8)' // green button
+				x.style.height = '33vh'; // footer 33% of viewport height
+			}
+			clicked = !clicked
+		}
+
+
+
 
 		// Leaflet providers base map URL
 		var basemap_source =
@@ -225,9 +502,7 @@
 		};
 
 		// request some basemap tiles and add to the map
-		var tiles = L.tileLayer(basemap_source, basemap_options).addTo(map);
-
-
+		//var tiles = L.tileLayer(basemap_source, basemap_options).addTo(map);
 	</script>
 </body>
 
