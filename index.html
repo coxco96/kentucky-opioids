@@ -320,20 +320,20 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
     <script>
         if (L.Browser.mobile) {
             var options = {
-                center: [37.8, -85.8],
-                zoom: 5.6,
-                minZoom: 5.6,
-                maxZoom: 5.6,
-                //zoomSnap: .3,
+                // center: [37.8, -85.8],
+                // zoom: 5.6,
+                // minZoom: 5.6,
+                // maxZoom: 5.6,
+                zoomSnap: .3,
                 zoomControl: false
             }
         } else {
             var options = {
-                center: [37.8, -85.8],
-                zoom: 7.1,
-                minZoom: 7.1,
-                maxZoom: 7.1,
-                //zoomSnap: .3,
+                // center: [37.8, -85.8],
+                // zoom: 7.1,
+                // minZoom: 7.1,
+                // maxZoom: 7.1,
+                zoomSnap: .3,
                 zoomControl: false,
 
             }
@@ -371,6 +371,8 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
 
             dataLayer.addTo(map);
             drawMap(dataLayer);
+            console.log(dataLayer.getBounds())
+            map.fitBounds(dataLayer.getBounds());
 
             dataLayer.eachLayer(function (layer) {
                 var props = layer.feature.properties;
