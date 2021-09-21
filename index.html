@@ -555,7 +555,7 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
                 var div = L.DomUtil.create('div', 'legend');
                 //insert placeholder text for now if needed:
                 div.innerHTML =
-                    `<h3>Pills per person, per year, on average:</h3><span style ="background: #2e2e2e"></span><label>Data unavailable</label>`
+                    `<h3>Pills per person</h3><span style ="background: #2e2e2e"></span><label>Data unavailable</label>`
 
                 for (let key in myObject) {
 
@@ -563,7 +563,7 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
                     console.log(myObject[key]["color"]);
                     var legendColor = myObject[key]["color"];
                     var legendDescription =
-                        `${myObject[key]["range"][0]} - ${myObject[key]["range"][1]} pills shipped per person`;
+                        `${myObject[key]["range"][0]} - ${myObject[key]["range"][1]}`;
                     //concatenate a <span> tag styled with the color and the range value of that class and include a label with the low and high ends of that class range:
                     div.innerHTML +=
                         `<span style ="background: ${legendColor}"></span><label>${legendDescription}</label>`;
