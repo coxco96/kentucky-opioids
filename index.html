@@ -418,6 +418,7 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
 
         function drawMap(dataLayer) {
             // I know that this works, but I don't understand how this gives us access to dataLayer since dataLayer isn't defined in the global scope?
+            // It's passed into this function as an argument, so it's scoped here, too.
             var breaks = getClassBreaks(dataLayer);
             dataLayer.eachLayer(function (layer) {
                 var props = layer.feature.properties;
