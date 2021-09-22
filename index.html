@@ -149,11 +149,11 @@
             font-family: 'Roboto Condensed', sans-serif;
         }
 
-        .leaflet-bar a {
+        /* .leaflet-bar a {
             /* Override the default style for Leaflet's zoom  */
-            background: rgba(100, 100, 100, 0.9);
+        /* background: rgba(100, 100, 100, 0.9);
             color: rgba(244, 244, 244, 0.8);
-        }
+        } */
 
         .legend span {
             width: 20px;
@@ -202,6 +202,17 @@
             .second-column {
                 width: 100%;
             }
+
+            .legend {
+                font-size: .5 em;
+            }
+        }
+
+
+        .leaflet-mobile-popup {
+            position: relative;
+            text-align: center;
+            z-index: 1;
         }
     </style>
 </head>
@@ -220,74 +231,64 @@
             <hr><br><br><br>
             <!-- <div class="first-column"> -->
 
-                <h2>The ARCOS Files</h2>
-<p>
-Every legally manufactured pain pill in America has a deep footprint. A database called the Automation of Reports and Consolidated Orders Systems, or rather, ARCOS, tracks every pain pill’s life--from prescriber to manufacturer to distributor to pharmacy--right up until the pills land in patient hands. There, the footprint becomes muddy. <br><br>
+            <h2>The ARCOS Files</h2>
+            <p>
+                <b>A total of <span style="background-color: #bbd4fc">2,452,373,586</span> pain pills were distributed in Kentucky from 2006-2014.</b><br>
+                Every legally manufactured pain pill in America has a deep footprint. A database called the Automation
+                of Reports and Consolidated Orders Systems, or ARCOS, tracks every pain pill’s life--from
+                prescriber to manufacturer to distributor to pharmacy--right up until the pills land in patient hands.
+                There, the footprint becomes muddy. <br><br>
 
-The ARCOS database is maintained by the Drug Enforcement Agency, and up until 2019, it was not public. The Washington Post and HD Media sued the DEA for the dataset, resulting in a release of ARCOS data from 2006-2014, cataloguing the journey of over 100 billion pills.<br><br>
+                The ARCOS database is maintained by the Drug Enforcement Agency, and up until 2019, it was not public.
+                The Washington Post and HD Media sued the DEA for the dataset, resulting in a release of ARCOS data from
+                2006-2014, cataloguing the journey of over 100 billion pills.<br><br>
 
-Three-quarters of the database is made up of oxycodone or hydrocodone pills, and the map above includes only these pills. The Washington Post created interactive data visualizations along with an API, granting public accessibility to over 100GB of data. I have used this API to access the data of interest to me and my home state, Kentucky.<br><br>
+                Three-quarters of the database is made up of oxycodone or hydrocodone pills, and the map above includes
+                only these pills. The Washington Post created interactive data visualizations along with an API,
+                granting public accessibility to over 100GB of data. I have used this API to access the data of interest
+                to me and my home state, Kentucky.<br><br>
 
-<b>A total of 2,452,373,586 pain pills were distributed in Kentucky from 2006-2014.</b><br>
+                
 
-It is worth noting that just because a pill was shipped to a pharmacy in a particular county, the pills did not necessarily end up in the hands of a resident of that county. The Washington Post identified 13 major drug companies that knew or should have known that large quantities of pain pills they sold were ending up on the black market.<br><br> </p>
+                It is worth noting that just because a pill was shipped to a pharmacy in a particular county, the pills
+                did not necessarily end up in the hands of a resident of that county. The Washington Post identified 13
+                major drug companies that knew or should have known that large quantities of pain pills they sold were
+                ending up on the black market.<br><br> </p>
 
-<h2>THE THREE STAGES OF THE OPIOID EPIDEMIC</h2>
 
-<p>The overprescription of pain pills kicked off what has become a decades-long epidemic, but the problem goes much further than pills now. Though not perfectly clear cut, he American Opioid Crisis can generally be broken down into three stages, or eras:<br><br></p>
 
-<li>2005-2011: Pain pills via overprescription</li>
-<li>2012-2016: Heroin</li>
-<li>2017-Present: Fentanyl</li>
-<br>
-<p>
+            <p>
+                The above map shows Kentucky’s most severely affected areas in its Appalachian regions. West Virginia,
+                Kentucky, and Virginia had the highest overall national overdose death rates from 2006-2012. <br><br>
 
-In the mid-1990s, Purdue Pharma, created a sustained-release form of oxycodone, bringing into existence the drug we know as OxyContin.<br><br>
+                
 
-The highly addictive drug paired with Purdue Pharma’s aggressive marketing to prescribers largely incited the opioid epidemic. Purdue Pharma knowingly mismarketed the drug to doctors. In 2007, the pharmaceutical company admitted to understanding its own wrongdoing and paid a $635-million fine. <br><br>
 
-“What they did legally to my state is criminal,” Sen. Joe Manchin III (D-W.Va.) said. “The companies, the distributors, were unconscionable. This was not a health plan. This was a targeted business plan. I cannot believe that we have not gone after them with criminal charges.”<br><br>
-Around 2011, laws took effect that regulated prescription pain pills more than before. Many pill users switched to heroin, which was now easier to obtain and sometimes cheaper. <br><br>
-In more recent years, Fentanyl has become the biggest cause of overdose deaths. Fentanyl is an incredibly concentrated drug often used by dealers to cut other substances, making supplies go further and giving users stronger highs.
-Although pain pills are not the main culprit of the opioid epidemic anymore, it was Big Pharma’s aggressive marketing schemes that incited the epidemic that continues to evolve.<br><br>
+                    <hr>
+                    <h2>TOOLS USED IN THIS PROJECT</h2>
 
-Just a few weeks ago, Purdue Pharma owners, the Sackler family, reached a bankruptcy settlement, which now protects them from future lawsuits. They admit no wrongdoing.<br><br></p>
-
-<h2>HOW DOES KENTUCKY COMPARE TO THE REST OF AMERICA?</h2>
-<p>
-The above map shows Kentucky’s most severely affected areas in its Appalachian regions. West Virginia, Kentucky, and Virginia had the highest national overdose death rates from 2006-2012. <br><br>
-
-<p>We have epidemics happening within epidemics. Appalachian regions are full of under-employment, poverty, and pain.<br><br>
-
-According to nature.com, Purdue Pharma largely focused its marketing in suburban, rural white communities. That strategy took advantage of the prevailing image of a drug addict as an African-American or Hispanic person who lived in the inner city to head off potential concerns about addiction, says Helena Hansen, an anthropologist and psychiatrist at NYU Langone Health in New York City. The company targeted doctors who were “serving patients that were not thought to be at risk for addiction”, Hansen says. “There was a definite racial subtext to that.”<br><br>
-
-Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-ruling-lets-sacklers-off-the-hook/2021/09/02/8466fe54-0c13-11ec-a7c8-61bb7b3bf628_story.html>here</a> to read more about current issues surrounding Purdue Pharma’s OxyContin ruling and how the company contributed to America’s opioid crisis. <br><br>
-
-<h2>TOOLS USED IN THIS PROJECT</h2>
-
-<li>QGIS</li>
-<li>R and RStudio</li>
-<li>Javascript</li>
-<li>Leaflet</li>
-<li><a href = https://www.washingtonpost.com/graphics/2019/investigations/dea-pain-pill-database/?itid=lk_inline_manual_18>Washington Post ARCOS Data (via API)</a></li>
-
+                    <ul>QGIS</ul>
+                    <ul>R and RStudio</ul>
+                    <ul>Javascript</ul>
+                    <ul>Leaflet</ul>
+                    <ul><a href=https://www.washingtonpost.com/graphics/2019/investigations/dea-pain-pill-database/?itid=lk_inline_manual_18>Washington
+                            Post ARCOS Data (via API)</a> </li> </p> <p></ul>
                 </p>
 
-                <p><b>Social links</b></p>
-                <ul>
-                    <li>See my projects on GitHub: <a href="https://github.com/coxco96">Court Cox</a></li>
+                <hr>
+                <p>See my projects on GitHub: <a href="https://github.com/coxco96">Court Cox</a></p>
 
                 </ul>
 
 
-            <!-- </div> -->
-            <!-- <div class="column">
+                <!-- </div> -->
+                <!-- <div class="column">
                 <img class="max-image-width" src="https://farm2.staticflickr.com/1816/28917431097_5bb5cadb70_h.jpg"
                     title="Electricity and bubbles in a Lexington sunset">
                 <div class="linkbox">
                     Electricity and bubbles in a Lexington sunset
                 </div> -->
-            </div>
+        </div>
         </div>
     </section>
     <footer>
@@ -320,10 +321,10 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
     <script>
         if (L.Browser.mobile) {
             var options = {
-                // center: [37.8, -85.8],
+                //center: [37.8, -85.8],
                 // zoom: 5.6,
-                // minZoom: 5.6,
-                // maxZoom: 5.6,
+                //minZoom: 5.6,
+                //maxZoom: 5.6,
                 zoomSnap: .3,
                 zoomControl: false
             }
@@ -335,8 +336,8 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
             var options = {
                 // center: [37.8, -85.8],
                 // zoom: 7.1,
-                // minZoom: 7.1,
-                // maxZoom: 7.1,
+                minZoom: 7.1,
+                maxZoom: 7.1,
                 zoomSnap: .3,
                 zoomControl: false,
 
@@ -344,16 +345,16 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
 
         }
 
-        // map options
-        // var options = {
-        // 	center: [37.8, -85.8],
-        // 	// zoom: 7.1,
-        // 	zoomSnap: .3,
-        // 	zoomControl: false
-        // }
+
 
         // create a Leaflet map in our division container with id of 'map'
         var map = L.map('map', options);
+
+
+
+
+
+
 
         var annualPills = 'kyoxydata_pillsperperson';
         var countyName = 'NAME';
@@ -382,49 +383,41 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
                 var props = layer.feature.properties;
                 if (props[annualPills] != 'null') {
                     var toolTipInfo =
-                        `<h3>${(props[countyName])} County <br> ${(props[annualPills])} pills per person per year</h3>`;
+                        `<h3>${(props[countyName])} County: <br> ${(props[annualPills])} pills per person per year</h3>`;
                 } else {
                     var toolTipInfo =
                         `<h3>${(props[countyName])} County <br> data unavailable`;
                 }
 
                 //console.log(props);
-                layer.bindTooltip(toolTipInfo, {
-                    sticky: true,
-                    opacity: .8
-                }).addTo(map);
+                if (L.Browser.mobile) {
+                    layer.bindPopup(toolTipInfo, {
+                        sticky: true,
+                        maxHeight: 150,
+                        opacity: .8,
+                        autoPan: false,
+                        maxWidth: 120,
+                        keepInView: true,
+                        className: 'leaflet-mobile-popup'
+                    }).addTo(map);
+
+                } else {
+
+                    layer.bindTooltip(toolTipInfo, {
+                        sticky: true,
+                        opacity: .8
+                    }).addTo(map);
+                }
             });
         }); // end $.getJSON function
 
 
 
-        //add county outlines:
 
-        //tell jQuery to wait until data is loaded before executing function:
-        // $.when(countyLayer).done(function () {
-        // 	//load, filter, and style state outline:
-        // 	$.getJSON("data/kycounties.geojson", function (data) {
-        // 		var stateLayer = L.geoJson(data, {
-        // 			style: function (feature) {
-        // 				return {
-        // 					color: '#292929',
-        // 					weight: .25,
-        // 					fillOpacity: 0,
-        // 					interactive: false
-        // 				};
-        // 			}
-        // 			//you would filter for the correct state here if needed
-
-        // 		});
-        // 		stateLayer.addTo(map)
-        // 	});
-        // });
 
         //	FUNCTIONS:
 
         function drawMap(dataLayer) {
-            // I know that this works, but I don't understand how this gives us access to dataLayer since dataLayer isn't defined in the global scope?
-            // It's passed into this function as an argument, so it's scoped here, too.
             var breaks = getClassBreaks(dataLayer);
             dataLayer.eachLayer(function (layer) {
                 var props = layer.feature.properties;
@@ -541,7 +534,7 @@ Click <a href = https://www.washingtonpost.com/business/purdue-pharma-oxycontin-
                 var legend = L.control({
 
 
-                    position: 'topright'
+                    position: 'topleft'
 
                 });
             } else {
