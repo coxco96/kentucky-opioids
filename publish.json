@@ -1,0 +1,8 @@
+{
+    "title": "Kentucky Opioid Shipments by County",
+    "info": "This map shows how many hydro/oxycodone pills were shipped to each Kentucky county per year per person on average from 2006-2014.",
+    "coordinates": [37.8, -85.8],
+    "author": "Court Cox",
+    "link": "https://coxco96.github.io/kentucky-opioids/"
+
+}
